@@ -1,6 +1,6 @@
 # aoc-kotlin-starter
 
-Starter template for solving [Advent of Code](https://adventofcode.com) in [Kotlin](https://kotlinlang.org/)
+![Build](https://github.com/tpepper0408/aoc2020/workflows/Build/badge.svg?branch=master)
 
 ### Features
 
