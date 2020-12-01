@@ -1,5 +1,6 @@
 package days
 
+import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is.`is`
 import org.hamcrest.core.IsInstanceOf.instanceOf
@@ -12,14 +13,14 @@ class Day1Test {
 
     @Test
     fun testPartOne() {
-        assertThat(dayOne.partOne(), `is`("THIS IS"))
+        assertThat(dayOne.partOne(), `is`(514579))
     }
 
     @Test
     fun testPartTwo() {
         val partTwo = dayOne.partTwo()
         assertThat(partTwo, notNullValue())
-        assertThat(partTwo, instanceOf(String::class.java))
-        assertThat(partTwo, `is`("FILE"))
+        assertThat(partTwo, instanceOf(Int::class.java))
+        assertThat(partTwo, `is`(241861950))
     }
 }
