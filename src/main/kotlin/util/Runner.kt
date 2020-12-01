@@ -42,20 +42,20 @@ object Runner {
         }
     }
 
-    private fun getAllDayClasses(): MutableSet<Class<out Day>>? {
+    private fun getAllDayClasses(): MutableSet<Class<out Day<*>>>? {
         return reflections.getSubTypesOf(Day::class.java)
     }
 
-    private fun printDay(dayClass: Class<out Day>) {
+    private fun printDay(dayClass: Class<out Day<*>>) {
         println("\n=== DAY ${dayNumber(dayClass.simpleName)} ===")
-        val day = dayClass.constructors[0].newInstance() as Day
+        val day = dayClass.constructors[0].newInstance() as Day<*>
 
         val partOne = measureTimedValue { day.partOne() }
         val partTwo = measureTimedValue { day.partTwo() }
         printParts(partOne, partTwo)
     }
 
-    private fun printParts(partOne: TimedValue<Any>, partTwo: TimedValue<Any>) {
+    private fun printParts(partOne: TimedValue<*>, partTwo: TimedValue<*>) {
         val padding = max(partOne.value.toString().length, partTwo.value.toString().length) + 14        // 14 is 8 (length of 'Part 1: ') + 6 more
         println("Part 1: ${partOne.value}".padEnd(padding, ' ') + "(${partOne.duration})")
         println("Part 2: ${partTwo.value}".padEnd(padding, ' ') + "(${partTwo.duration})")
