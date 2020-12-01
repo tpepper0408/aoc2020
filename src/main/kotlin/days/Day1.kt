@@ -1,8 +1,8 @@
 package days
 
-class Day1 : Day(1) {
+class Day1 : Day<Int>(1) {
 
-    override fun partOne(): Any {
+    override fun partOne(): Int {
         val ints = inputList.map(String::toInt)
         for (i in ints.indices) {
             for (j in ints.indices) {
@@ -15,7 +15,7 @@ class Day1 : Day(1) {
         return 0
     }
 
-    override fun partTwo(): Any {
+    override fun partTwo(): Int {
         val ints = inputList.map(String::toInt)
         for (i in ints.indices) {
             for (j in ints.indices) {

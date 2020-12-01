@@ -1,10 +1,8 @@
 package days
 
-import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is.`is`
-import org.hamcrest.core.IsInstanceOf.instanceOf
-import org.hamcrest.core.IsNull.notNullValue
+import org.hamcrest.core.IsEqual.equalTo
 import org.junit.Test
 
 class Day1Test {
@@ -13,14 +11,12 @@ class Day1Test {
 
     @Test
     fun testPartOne() {
-        assertThat(dayOne.partOne(), `is`(514579))
+        assertThat(dayOne.partOne(), `is`(equalTo(514579)))
     }
 
     @Test
     fun testPartTwo() {
         val partTwo = dayOne.partTwo()
-        assertThat(partTwo, notNullValue())
-        assertThat(partTwo, instanceOf(Int::class.java))
-        assertThat(partTwo, `is`(241861950))
+        assertThat(partTwo, `is`(equalTo(241861950)))
     }
 }
