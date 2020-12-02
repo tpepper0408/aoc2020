@@ -11,12 +11,12 @@ class Day1Test {
 
     @Test
     fun testPartOne() {
-        assertThat(dayOne.partOne(), `is`(equalTo(514579)))
+        assertThat(dayOne.partOne(), `is`(equalTo(1006176)))
     }
 
     @Test
     fun testPartTwo() {
         val partTwo = dayOne.partTwo()
-        assertThat(partTwo, `is`(equalTo(241861950)))
+        assertThat(partTwo, `is`(equalTo(199132160)))
     }
 }
