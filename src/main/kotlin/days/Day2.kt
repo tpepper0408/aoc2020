@@ -14,15 +14,9 @@ class Day2 : Day<Int>(2) {
     }
 
     private fun checkPassword(it: String, checker: (String, Char, Int, Int) -> Boolean): Boolean {
-        val indexOfHyphen = it.indexOf('-')
-        val indexOfFirstSpace = it.indexOf(' ', indexOfHyphen)
-        val indexOfPassword = it.indexOf(':') + 1
-
-        val startRange = it.substring(0, indexOfHyphen).toInt()
-        val endRange = it.substring(indexOfHyphen + 1, indexOfFirstSpace).toInt()
-        val letterToCheck = it[indexOfFirstSpace + 1]
-        val passwordToCheck = it.substring(indexOfPassword)
-        return checker(passwordToCheck, letterToCheck, startRange, endRange)
+        val foundPattern = Regex("^([0-9]+)-([0-9]+) ([a-z]): ([a-z]+)\$").find(it)!!
+        val (startRange, endRange, letterToCheck, passwordToCheck) = foundPattern.destructured
+        return checker(passwordToCheck, letterToCheck.toCharArray()[0], startRange.toInt(), endRange.toInt())
     }
 
     private fun checkPasswordViability(passwordToCheck: String, letterToCheck: Char, startRange: Int, endRange: Int): Boolean {
@@ -36,14 +30,8 @@ class Day2 : Day<Int>(2) {
     }
 
     private fun checkPasswordViabilityWithIndexes(passwordToCheck: String, letterToCheck: Char, startRange: Int, endRange: Int): Boolean {
-        val firstInRange = passwordToCheck[startRange] == letterToCheck
-        val secondInRange = passwordToCheck[endRange] == letterToCheck
-        if (firstInRange && !secondInRange) {
-            return true
-        }
-        if (secondInRange && !firstInRange) {
-            return true
-        }
-        return false
+        val firstInRange = passwordToCheck[startRange - 1] == letterToCheck
+        val secondInRange = passwordToCheck[endRange - 1] == letterToCheck
+        return firstInRange.xor(secondInRange)
     }
 }
