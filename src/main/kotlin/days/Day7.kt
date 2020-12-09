@@ -3,24 +3,12 @@ package days
 class Day7 : Day<Int>(7) {
     override fun partOne(): Int {
         val colourMap = HashMap<String, List<Pair<String, Int>>>()
-        inputList.map {
-            val (colour, childrenString) = it.split("bags contain")
+        inputList.map { row ->
+            val (colour, childrenString) = row.split("bags contain")
                     .map { it.trim() }
             val children: List<Pair<String, Int>> = childrenString.split(',')
                     .map { it.trim() }
-                    .map {
-                        it.split(',')
-                                .map {
-                                    if (it.startsWith("no")) {
-                                        return@map Pair("", 0)
-                                    }
-                                    val number = it[0].toString().toInt()
-                                    val (colour) = Regex("([a-z ]*?) bag")
-                                            .find(it)!!
-                                            .destructured
-                                    Pair(colour.trim(), number)
-                                }
-                    }.flatten()
+                    .map { findChildren(it) }.flatten()
             colourMap.put(colour, children)
         }
 
@@ -28,7 +16,21 @@ class Day7 : Day<Int>(7) {
         return coloursThatContainShinyGold.size
     }
 
-    fun checkForColour(colourMap: HashMap<String, List<Pair<String, Int>>>, colourToCheck: String) : HashSet<String> {
+    private fun findChildren(it: String): List<Pair<String, Int>> {
+        return it.split(',')
+                .map {
+                    if (it.startsWith("no")) {
+                        return@map Pair("", 0)
+                    }
+                    val number = it[0].toString().toInt()
+                    val (colour) = Regex("([a-z ]*?) bag")
+                            .find(it)!!
+                            .destructured
+                    Pair(colour.trim(), number)
+                }
+    }
+
+    fun checkForColour(colourMap: HashMap<String, List<Pair<String, Int>>>, colourToCheck: String): HashSet<String> {
         val retval = HashSet<String>()
         for (childColour in colourMap.keys) {
             val children = colourMap.get(childColour)!!
@@ -44,24 +46,12 @@ class Day7 : Day<Int>(7) {
 
     override fun partTwo(): Int {
         val colourMap = HashMap<String, List<Pair<String, Int>>>()
-        inputList.map {
-            val (colour, childrenString) = it.split("bags contain")
+        inputList.map { row ->
+            val (colour, childrenString) = row.split("bags contain")
                     .map { it.trim() }
             val children: List<Pair<String, Int>> = childrenString.split(',')
                     .map { it.trim() }
-                    .map {
-                        it.split(',')
-                                .map {
-                                    if (it.startsWith("no")) {
-                                        return@map Pair("", 0)
-                                    }
-                                    val number = it[0].toString().toInt()
-                                    val (colour) = Regex("([a-z ]*?) bag")
-                                            .find(it)!!
-                                            .destructured
-                                    Pair(colour.trim(), number)
-                                }
-                    }.flatten()
+                    .map { findChildren(it) }.flatten()
             colourMap.put(colour, children)
         }
         return getNumberOfChildren(colourMap, "shiny gold")

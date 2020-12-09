@@ -8,10 +8,6 @@ class Day8 : Day<Int>(8) {
     override fun partTwo(): Int {
         val instructions = parseInstructions()
 
-        //may just be fine?
-        val (accumulated, completed) = run(instructions)
-        if (completed) return accumulated
-
         //if not do some swapping.
         val interestingIndexes = instructions.mapIndexed { index, instruction -> index to instruction }
                 .filter { (_, instruction) -> instruction.first == "nop" || instruction.first == "jmp" }
