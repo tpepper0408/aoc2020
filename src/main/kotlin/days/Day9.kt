@@ -28,10 +28,10 @@ class Day9() : Day<Long>(9) {
 
     override fun partTwo(): Long {
         val values = inputList.map { it.toLong() }
-        var sum = 0L
         var beginning = 0
         var foundRange: IntRange? = null
         while (foundRange == null) {
+            var sum = 0L
             for (index in beginning..values.lastIndex) {
                 sum += values[index]
                 if (sum == badNumber) {
@@ -40,11 +40,15 @@ class Day9() : Day<Long>(9) {
                     break
                 }
             }
-            sum = 0L
             beginning++
+            if (beginning == values.lastIndex) {
+                break
+            }
         }
-
+        if (foundRange == null) {
+            return 0
+        }
         val slice = values.slice(foundRange)
-        return slice.minByOrNull { it } !! + slice.maxByOrNull { it } !!
+        return slice.minByOrNull { it }!! + slice.maxByOrNull { it }!!
     }
 }
