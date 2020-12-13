@@ -5,22 +5,21 @@ import org.junit.Test
 import org.junit.Assert.*
 import org.junit.Before
 
-class Day11Test {
-
-    val day11 = Day11()
+class Day12Test {
+    val day12 = Day12()
 
     @Before
     fun setUp() {
-        day11.debug = true
+        day12.debug = true
     }
 
     @Test
     fun partOne() {
-        assertEquals(37, day11.partOne())
+        assertEquals(25, day12.partOne())
     }
 
     @Test
     fun partTwo() {
-        assertEquals(26, day11.partTwo())
+        assertEquals(286, day12.partTwo())
     }
 }

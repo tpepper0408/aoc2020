@@ -11,8 +11,8 @@ class Day11 : Day<Int>(11) {
     override fun partOne(): Int {
         var seatMap = parseSeatMap()
         if (debug) printSeatMap(seatMap, "Initial state")
-        var findChangesNeeded = ArrayList<ArrayList<Seat>>()
-        var processedAllChanges = false
+        var findChangesNeeded: ArrayList<ArrayList<Seat>>
+        var processedAllChanges: Boolean
         do {
             findChangesNeeded = processChanges(seatMap, false)
             processedAllChanges = !checkForChangesNeeded(findChangesNeeded)
@@ -20,6 +20,77 @@ class Day11 : Day<Int>(11) {
             if (debug) printSeatMap(seatMap, "Processed")
         } while (!processedAllChanges)
         return countOccupiedSeats(seatMap)
+    }
+
+    override fun partTwo(): Int {
+        var seatMap = parseSeatMap()
+        if (debug) printSeatMap(seatMap, "Initial state")
+        var findChangesNeeded: ArrayList<ArrayList<Seat>>
+        var processedAllChanges: Boolean
+        do {
+            findChangesNeeded = findChangesPartTwo(seatMap)
+            processedAllChanges = !checkForChangesNeeded(findChangesNeeded)
+            seatMap = processChanges(findChangesNeeded, true)
+            if (debug) printSeatMap(seatMap, "Processed")
+        } while (!processedAllChanges)
+        return countOccupiedSeats(seatMap)
+    }
+
+    private fun findChangesPartTwo(seatMap: ArrayList<ArrayList<Seat>>): ArrayList<ArrayList<Seat>> {
+        val retval = seatMap.toList()
+        for (seatRowIndex in seatMap.indices) {
+            val seatRow = seatMap[seatRowIndex]
+            for (columnIndex in seatRow.indices) {
+                when (seatRow[columnIndex].state) {
+                    FLOOR -> retval[seatRowIndex][columnIndex] = Seat(FLOOR, false)
+                    FREE -> {
+                        val acceptableStates = arrayListOf<State>(FLOOR, FREE, OUT)
+                        val checks = arrayListOf<Boolean>(
+                                acceptableStates.contains(getFirstVisibleSeatState(seatMap, seatRowIndex, columnIndex,-1, -1)),
+                                acceptableStates.contains(getFirstVisibleSeatState(seatMap, seatRowIndex, columnIndex,-1, 0)),
+                                acceptableStates.contains(getFirstVisibleSeatState(seatMap, seatRowIndex, columnIndex,-1, 1)),
+                                acceptableStates.contains(getFirstVisibleSeatState(seatMap, seatRowIndex, columnIndex,0, -1)),
+                                acceptableStates.contains(getFirstVisibleSeatState(seatMap, seatRowIndex, columnIndex,0, 1)),
+                                acceptableStates.contains(getFirstVisibleSeatState(seatMap, seatRowIndex, columnIndex,1, -1)),
+                                acceptableStates.contains(getFirstVisibleSeatState(seatMap, seatRowIndex, columnIndex,1, 0)),
+                                acceptableStates.contains(getFirstVisibleSeatState(seatMap, seatRowIndex, columnIndex,1, 1)),
+                        )
+                        retval[seatRowIndex][columnIndex] = Seat(FREE, checks.reduce { acc, b -> acc && b })
+                    }
+                    OCCUPIED -> {
+                        val acceptableStates = arrayListOf<State>(OCCUPIED)
+                        val checks = arrayListOf<Boolean>(
+                                acceptableStates.contains(getFirstVisibleSeatState(seatMap, seatRowIndex, columnIndex,-1, -1)),
+                                acceptableStates.contains(getFirstVisibleSeatState(seatMap, seatRowIndex, columnIndex,-1, 0)),
+                                acceptableStates.contains(getFirstVisibleSeatState(seatMap, seatRowIndex, columnIndex,-1, 1)),
+                                acceptableStates.contains(getFirstVisibleSeatState(seatMap, seatRowIndex, columnIndex,0, -1)),
+                                acceptableStates.contains(getFirstVisibleSeatState(seatMap, seatRowIndex, columnIndex,0, 1)),
+                                acceptableStates.contains(getFirstVisibleSeatState(seatMap, seatRowIndex, columnIndex,1, -1)),
+                                acceptableStates.contains(getFirstVisibleSeatState(seatMap, seatRowIndex, columnIndex,1, 0)),
+                                acceptableStates.contains(getFirstVisibleSeatState(seatMap, seatRowIndex, columnIndex,1, 1)),
+                        )
+                        retval[seatRowIndex][columnIndex] = Seat(OCCUPIED, checks.filter { it }.count() >= 5)
+
+                    }
+                }
+            }
+        }
+        return ArrayList(retval)
+    }
+
+    private fun getFirstVisibleSeatState(seatMap: ArrayList<ArrayList<Seat>>, seatRowIndex: Int, columnIndex: Int, xChange: Int, yChange: Int): State {
+        var state: State
+        var seatRowIndexToCheck = seatRowIndex + xChange
+        var columnIndexToCheck = columnIndex + yChange
+        while (true) {
+            state = getSeatState(seatMap, seatRowIndexToCheck, columnIndexToCheck)
+            if (state == OUT || state == OCCUPIED || state == FREE) {
+                break
+            }
+            seatRowIndexToCheck += xChange
+            columnIndexToCheck += yChange
+        }
+        return state
     }
 
     private fun countOccupiedSeats(seatMap: java.util.ArrayList<java.util.ArrayList<Seat>>): Int {
@@ -43,7 +114,7 @@ class Day11 : Day<Int>(11) {
                         if (seatRow[columnIndex].switch && performChanges) {
                             retval[seatRowIndex][columnIndex] = Seat(OCCUPIED, false)
                         } else {
-                            val acceptableStates = arrayListOf<State>(FLOOR, FREE)
+                            val acceptableStates = arrayListOf<State>(FLOOR, FREE, OUT)
                             val checks = arrayListOf<Boolean>(
                                     acceptableStates.contains(getSeatState(seatMap, seatRowIndex - 1, columnIndex - 1)),
                                     acceptableStates.contains(getSeatState(seatMap, seatRowIndex - 1, columnIndex)),
@@ -82,11 +153,11 @@ class Day11 : Day<Int>(11) {
     }
 
     private fun getSeatState(seatMap: ArrayList<ArrayList<Seat>>,
-                               rowIndex: Int, columnIndex: Int): State {
+                             rowIndex: Int, columnIndex: Int): State {
         return try {
             seatMap[rowIndex][columnIndex].state
         } catch (exception: IndexOutOfBoundsException) {
-            FLOOR
+            OUT
         }
     }
 
@@ -125,9 +196,5 @@ class Day11 : Day<Int>(11) {
             }
             println()
         }
-    }
-
-    override fun partTwo(): Int {
-        return 0
     }
 }
