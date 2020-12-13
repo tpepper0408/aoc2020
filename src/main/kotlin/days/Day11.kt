@@ -72,6 +72,7 @@ class Day11 : Day<Int>(11) {
                         retval[seatRowIndex][columnIndex] = Seat(OCCUPIED, checks.filter { it }.count() >= 5)
 
                     }
+                    OUT -> throw Exception("Not expecting OUT")
                 }
             }
         }
@@ -146,6 +147,7 @@ class Day11 : Day<Int>(11) {
                             retval[seatRowIndex][columnIndex] = Seat(OCCUPIED, checks.filter { it }.count() >= 4)
                         }
                     }
+                    OUT -> throw Exception("Not expecting OUT")
                 }
             }
         }
