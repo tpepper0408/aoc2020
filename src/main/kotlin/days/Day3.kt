@@ -3,9 +3,11 @@ package days
 import java.lang.IndexOutOfBoundsException
 
 class Day3 : Day<Long>(3) {
+    var debug = false
+
     override fun partOne(): Long {
         var slopeMap = parseSlope()
-        printSlopeMap(slopeMap, "Initial Map")
+        if (debug) printSlopeMap(slopeMap, "Initial Map")
 
         var position = Pair(1, 3)
         return traverseSlopeAndFindTrees(slopeMap, position)
@@ -46,7 +48,7 @@ class Day3 : Day<Long>(3) {
         return numberOfTrees
     }
 
-    fun printSlopeMap(slopeMap: ArrayList<ArrayList<Boolean>>, message: String) {
+    private fun printSlopeMap(slopeMap: ArrayList<ArrayList<Boolean>>, message: String) {
         println(message)
         for (row in slopeMap) {
             for (tree in row) {
@@ -58,7 +60,7 @@ class Day3 : Day<Long>(3) {
 
     override fun partTwo(): Long {
         var slopeMap = parseSlope()
-        printSlopeMap(slopeMap, "Initial Map")
+        if (debug) printSlopeMap(slopeMap, "Initial Map")
 
         var treesFound = 1L
         for (position in
